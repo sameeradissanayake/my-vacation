@@ -12,12 +12,11 @@ if not GOOGLE_API_KEY:
     raise ValueError("Google API key is missing. Set the GOOGLE_API_KEY environment variable.")
 
 
-async def get_attractions(destination: str):
-    print(GOOGLE_API_KEY)
+async def get_attractions(destination: str, api_key: str):
     url = "https://places.googleapis.com/v1/places:searchText"
     headers = {
         "Content-Type": "application/json",
-        "X-Goog-Api-Key": GOOGLE_API_KEY,
+        "X-Goog-Api-Key": api_key,
         "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.priceLevel"
     }
     payload = {

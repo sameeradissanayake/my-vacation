@@ -1,22 +1,18 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import os
-from dotenv import load_dotenv
+
 from openai import OpenAI
 
+from .config import OPENAI_API_KEY, GOOGLE_API_KEY
 from .api_clients import get_attractions, get_weather_forecast
 
-# Load .env
-load_dotenv()
 
-# Get API key
-api_key = os.getenv("OPENAI_API_KEY")
-
-if not api_key:
+if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY not found in environment variables")
 
 # Initialize OpenAI client
-client = OpenAI(api_key=api_key)
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 # FastAPI app
 app = FastAPI(title="AI Travel Planner")
@@ -31,7 +27,7 @@ class TripRequest(BaseModel):
 # POST endpoint
 @app.post("/plan")
 async def generate_plan(request: TripRequest):
-    attractions = await get_attractions(request.destination)
+    attractions = await get_attractions(request.destination, GOOGLE_API_KEY)
 
     print(f"Attractions in {request.destination}: {attractions}")
     # prompt = (
