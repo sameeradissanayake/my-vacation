@@ -40,14 +40,13 @@ async def get_attractions(destination: str, api_key: str):
     return results
 
 
-async def get_weather_forecast(city: str):
-    url = "https://api.openweathermap.org/data/2.5/forecast"
+async def get_weather_forecast(city: str, api_key: str):
+    url = "https://api.openweathermap.org/data/2.5/weather"
     params = {
         "q": city,
-        "appid": WEATHER_API_KEY,
-        "units": "metric"
+        "appid": api_key
     }
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(verify=False) as client:
         resp = await client.get(url, params=params)
         data = resp.json()
         return data  # You can later filter by trip dates
