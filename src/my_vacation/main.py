@@ -49,4 +49,4 @@ async def generate_plan(request: TripRequest):
     #     temperature=0.7
     # )
 
-    return {"attractions": attractions[0], "weather": weather}
+    return {"attractions": attractions, "weather": weather}

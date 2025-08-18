@@ -1,15 +1,7 @@
 import httpx
 import os
 import asyncio
-from dotenv import load_dotenv
 
-load_dotenv()
-
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
-
-if not GOOGLE_API_KEY:
-    raise ValueError("Google API key is missing. Set the GOOGLE_API_KEY environment variable.")
 
 
 async def get_attractions(destination: str, api_key: str):
@@ -41,7 +33,7 @@ async def get_attractions(destination: str, api_key: str):
 
 
 async def get_weather_forecast(city: str, api_key: str):
-    url = "https://api.openweathermap.org/data/2.5/weather"
+    url = "https://api.openweathermap.org/data/2.5/forecast?"
     params = {
         "q": city,
         "appid": api_key
@@ -49,4 +41,18 @@ async def get_weather_forecast(city: str, api_key: str):
     async with httpx.AsyncClient(verify=False) as client:
         resp = await client.get(url, params=params)
         data = resp.json()
-        return data  # You can later filter by trip dates
+
+        daily_forecast = {}
+
+        for entry in data["list"]:
+            date = entry["dt_txt"].split(" ")[0]  # extract date (YYYY-MM-DD)
+            time = entry["dt_txt"].split(" ")[1]  # extract time (HH:MM:SS)
+            
+            if time == "12:00:00":  # pick the forecast for 12:00 each day
+                daily_forecast[date] = {
+                    "temp": entry["main"]["temp"],
+                    "humidity": entry["main"]["humidity"],
+                    "feels_like": entry["main"]["feels_like"],
+                    "description": entry["weather"][0]["description"]
+                }
+        return daily_forecast  # You can later filter by trip dates
