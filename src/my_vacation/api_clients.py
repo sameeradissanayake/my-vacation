@@ -20,7 +20,7 @@ async def get_attractions(destination: str, api_key: str):
         "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.priceLevel"
     }
     payload = {
-        "textQuery": f"Give me travel hotspots in {destination}"
+        "textQuery": f"Give me popular attractions in {destination}"
     }
 
     async with httpx.AsyncClient() as client:
