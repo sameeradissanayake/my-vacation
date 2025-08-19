@@ -6,10 +6,15 @@ authors = [
     {name = "uie27176"}
 ]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 dependencies = [
     "uvicorn (>=0.35.0,<0.36.0)",
-    "fastapi (>=0.116.1,<0.117.0)"
+    "fastapi (>=0.116.1,<0.117.0)",
+    "openai (>=1.99.9,<2.0.0)",
+    "dotenv (>=0.9.9,<0.10.0)",
+    "requests (>=2.32.4,<3.0.0)",
+    "httpx (>=0.28.1,<0.29.0)",
+    "streamlit (>=1.48.1,<2.0.0)"
 ]
 
 [tool.poetry]
