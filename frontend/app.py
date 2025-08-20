@@ -2,6 +2,8 @@ import streamlit as st
 import datetime
 import requests
 
+import pandas as pd
+
 
 # Point this to your FastAPI backend
 BACKEND_URL = "http://127.0.0.1:8000/plan"
@@ -51,10 +53,12 @@ if st.button("✨ Generate Itinerary"):
 
         placeholder.empty()
 
+        st.write("")
         st.subheader("🗓️ Your Itinerary")
         st.write(data["itinerary"])
 
         if "attractions" in data:
+            st.write("")
             st.subheader(f"📍 Popular Attractions in {destination}")
             count = len(data["attractions"])
             
@@ -64,9 +68,40 @@ if st.button("✨ Generate Itinerary"):
 
             st.markdown(attraction_list)
 
-        # if "weather_summary" in data:
-        #     st.subheader("🌦️ Weather Forecast (raw data)")
-        #     # st.json(data["weather_summary"])
+        if "weather" in data:
+            st.write("")
+            st.subheader(f"🌦️ Weather Forecast for Next Several Days in {destination}")
+
+            dates_list = []
+            temperature_list = []
+            humidity_list = []
+            feels_like_list = []
+            description_list = []
+
+            for date in data["weather"]:
+                dates_list.append(date)
+
+                temp_k = data["weather"][date]["temp"]
+                formatted_temp_c = "{:.2f}".format(temp_k - 273.15)
+                temperature_list.append(formatted_temp_c)
+
+                humidity_list.append(data["weather"][date]["humidity"])
+                
+                feels_k = data["weather"][date]["feels_like"]
+                formatted_feel_c = "{:.2f}".format(feels_k - 273.15)
+                feels_like_list.append(formatted_feel_c)
+
+                description_list.append(data["weather"][date]["description"])
+
+            weather_summary = {'Date': dates_list,
+                               'Temperature': temperature_list,
+                               'Humidity': humidity_list,
+                               'Feels Like': feels_like_list,
+                               'Description': description_list}
+            
+            weather_df = pd.DataFrame(weather_summary)
+
+            st.table(weather_df)
 
     except Exception as e:
         placeholder.empty()
