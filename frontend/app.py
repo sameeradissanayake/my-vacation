@@ -31,22 +31,38 @@ if st.button("✨ Generate Itinerary"):
         payload["activities"] = activities
 
     try:
+        placeholder = st.empty()
+        with placeholder.container():
+            col = st.columns([1])[0]  # single column
+            with col:
+                row1, row2 = st.columns([4, 1])  # text bigger, GIF smaller
+                with row1:
+                    st.markdown(
+                        "<p style='font-size:20px; margin:0;'>⏳ Sending request... please wait</p>", 
+                        unsafe_allow_html=True
+                    )
+                with row2:
+                    st.image("https://i.gifer.com/ZZ5H.gif", width=30)
+
+
         response = requests.post(BACKEND_URL, json=payload)
         response.raise_for_status()
         data = response.json()
 
-        print(payload["travel_date"])
+        placeholder.empty()
 
         st.subheader("🗓️ Your Itinerary")
-        # st.write(data["itinerary"])
+        st.write(data["itinerary"])
 
-        if "attractions" in data:
-            st.subheader("📍 Attractions")
-            st.write(data["attractions"])
+        # if "attractions" in data:
+        #     st.subheader("📍 Attractions")
+        #     st.write(data["attractions"])
 
-        if "weather_summary" in data:
-            st.subheader("🌦️ Weather Forecast (raw data)")
-            # st.json(data["weather_summary"])
+        # if "weather_summary" in data:
+        #     st.subheader("🌦️ Weather Forecast (raw data)")
+        #     # st.json(data["weather_summary"])
 
     except Exception as e:
-        st.error(f"Error fetching itinerary: {e}")
+        placeholder.empty()
+        st.write("Sorry our planner is not available at the moment!! 😞")
+        # st.error(f"Error fetching itinerary: {e}")

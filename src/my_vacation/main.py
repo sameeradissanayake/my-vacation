@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import os
+import certifi
 
 from openai import OpenAI
 
@@ -17,6 +18,7 @@ if not GOOGLE_API_KEY:
 if not WEATHER_API_KEY:
     raise ValueError("WEATHER_API_KEY not found in environment variables")
 
+os.environ["SSL_CERT_FILE"] = certifi.where()
 
 # Initialize OpenAI client
 client = OpenAI(base_url="https://models.github.ai/inference", api_key = OPENAI_API_KEY)
