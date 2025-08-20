@@ -54,9 +54,15 @@ if st.button("✨ Generate Itinerary"):
         st.subheader("🗓️ Your Itinerary")
         st.write(data["itinerary"])
 
-        # if "attractions" in data:
-        #     st.subheader("📍 Attractions")
-        #     st.write(data["attractions"])
+        if "attractions" in data:
+            st.subheader(f"📍 Popular Attractions in {destination}")
+            count = len(data["attractions"])
+            
+            attraction_list = ""
+            for i in data["attractions"]:
+                attraction_list += f"- {i['name']}\n"
+
+            st.markdown(attraction_list)
 
         # if "weather_summary" in data:
         #     st.subheader("🌦️ Weather Forecast (raw data)")
